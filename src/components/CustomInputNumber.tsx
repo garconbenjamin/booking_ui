@@ -1,64 +1,85 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+
+let intervalId: NodeJS.Timeout | null = null;
+let timeoutId = null;
 
 function CustomInputNumber(props: React.InputHTMLAttributes<HTMLInputElement>) {
   const { min, max, step, name, value, onChange, onBlur } = props;
-  const [inputValue, setInputValue] = useState(0);
-  const [mouseFlag, setMouseFlag] = useState(false);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(Number(event.target.value));
-  };
-  const handleMouseDown = () => {
-    setMouseFlag(true);
+  const [mouseFlag, setMouseFlag] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleMouseDown = (flag: -1 | 1) => {
+    setMouseFlag(flag);
   };
   const handleMouseUp = () => {
-    setMouseFlag(false);
+    setMouseFlag(0);
   };
+  const stepUp = useCallback(() => {
+    inputRef.current.stepUp();
+    inputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
+  }, []);
+  const stepDown = useCallback(() => {
+    inputRef.current.stepDown();
+    inputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
+  }, []);
 
   useEffect(() => {
-    let id: NodeJS.Timeout | null = null;
-    let timeout = null;
-    const updateValue = async () => {
-      if (mouseFlag && id === null) {
-        timeout = setTimeout(() => {
-          id = setInterval(() => {
-            setInputValue((value) => value + 1);
+    const resetActions = () => {
+      clearInterval(intervalId);
+      intervalId = null;
+    };
+    const updateValue = () => {
+      if (mouseFlag !== 0) {
+        timeoutId = setTimeout(() => {
+          intervalId = setInterval(() => {
+            if (mouseFlag === 1) {
+              stepUp();
+            } else if (mouseFlag === -1) {
+              stepDown();
+            }
           }, 100);
         }, 500);
       } else {
-        clearInterval(id);
-        id = null;
+        resetActions();
       }
     };
+
     updateValue();
     return () => {
-      clearInterval(id);
-      clearTimeout(timeout);
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
     };
   }, [mouseFlag]);
   return (
     <div className="flex justify-between">
       <button
-        className="btn"
-        onMouseDown={handleMouseDown}
+        className="box btn"
+        onMouseDown={() => handleMouseDown(-1)}
         onMouseUp={handleMouseUp}
-        onClick={() => setInputValue(inputValue - 1)}
-        disabled={min !== undefined && inputValue <= Number(min)}
+        onClick={stepDown}
+        disabled={value <= min}
       >
         −
       </button>
       <input
-        className="w-12 h-12 border rounded-sm flex justify-center items-center text-center"
+        ref={inputRef}
+        name={name}
+        className="box text-center"
         type="number"
-        value={inputValue}
-        onChange={handleChange}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        min={min}
+        max={max}
+        step={step}
       />
       <button
-        className="btn"
-        onMouseDown={handleMouseDown}
+        className="box btn"
+        onMouseDown={() => handleMouseDown(1)}
         onMouseUp={handleMouseUp}
-        onClick={() => setInputValue(inputValue + 1)}
-        disabled={max !== undefined && inputValue >= Number(max)}
+        onClick={stepUp}
+        disabled={value >= max}
       >
         ＋
       </button>
