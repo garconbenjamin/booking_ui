@@ -17,7 +17,9 @@ const config: webpack.Configuration = {
       },
       {
         test: /\.ts(x?)$/,
-        use: [{ loader: "babel-loader", options: { cacheDirectory: true } }],
+        use: [
+          { loader: "babel-loader", options: { cacheDirectory: true, plugins: ["@babel/plugin-transform-runtime"] } },
+        ],
         exclude: /node_modules/,
       },
       {
