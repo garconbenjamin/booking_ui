@@ -1,12 +1,7 @@
-import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
-import CustomInputNumber from "./CustomInputNumber";
-import { v4 as uuid } from "uuid";
-const PEOPLE_PER_ROOM = 4;
-const INITIAL_ROOM_RESULT: RoomResult[] = [
-  { id: uuid(), adult: 1, child: 0 },
-  { id: uuid(), adult: 1, child: 0 },
-  { id: uuid(), adult: 1, child: 0 },
-];
+import { useEffect, useState, Dispatch, SetStateAction } from 'react';
+import CustomInputNumber from './CustomInputNumber';
+import { INITIAL_ROOM_RESULT, PEOPLE_PER_ROOM } from '../constants';
+
 type RoomResult = {
   id: string;
   adult: number;
@@ -18,8 +13,8 @@ type RoomFormProps = {
   onChange: (result: RoomResult[]) => void;
 };
 enum PEOPLE_TYPE {
-  ADULT = "adult",
-  CHILD = "child",
+  ADULT = 'adult',
+  CHILD = 'child',
 }
 
 function RoomsInfo(props: { guest: number; room: number; remainingPeople: number }) {
@@ -46,7 +41,7 @@ function RoomItem(props: {
   const { adult, child, remainingPeople, className, setRooms, index } = props;
   const disabledAdd = remainingPeople === 0;
   const handleRoomChange = ({ value, type }: { value: number; type: PEOPLE_TYPE }) => {
-    const updatedRooms = (rooms) =>
+    const updatedRooms = (rooms: RoomResult[]) =>
       rooms.map((room, roomIndex) => {
         if (roomIndex === index) {
           return {
@@ -72,7 +67,10 @@ function RoomItem(props: {
             min={1}
             max={disabledAdd ? adult : PEOPLE_PER_ROOM - child}
             onChange={(e) => {
-              handleRoomChange({ value: Number(e.target.value), type: PEOPLE_TYPE.ADULT });
+              handleRoomChange({
+                value: Number(e.target.value),
+                type: PEOPLE_TYPE.ADULT,
+              });
             }}
           />
         </div>
@@ -83,7 +81,10 @@ function RoomItem(props: {
             min={0}
             max={disabledAdd ? child : PEOPLE_PER_ROOM - adult}
             onChange={(e) => {
-              handleRoomChange({ value: Number(e.target.value), type: PEOPLE_TYPE.CHILD });
+              handleRoomChange({
+                value: Number(e.target.value),
+                type: PEOPLE_TYPE.CHILD,
+              });
             }}
           />
         </div>
@@ -112,7 +113,7 @@ function RoomForm(props: RoomFormProps) {
             remainingPeople={remainingPeople}
             key={id}
             index={index}
-            className={index === rooms.length - 1 ? "" : "border-b"}
+            className={index === rooms.length - 1 ? '' : 'border-b'}
             setRooms={setRooms}
           />
         );

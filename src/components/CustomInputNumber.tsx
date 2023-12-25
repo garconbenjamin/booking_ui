@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
-let intervalId: NodeJS.Timeout | null = null;
-let timeoutId = null;
+let intervalId: any;
+let timeoutId: any;
 
 type CustomInputNumberProps = Pick<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -12,7 +12,7 @@ function CustomInputNumber(props: CustomInputNumberProps) {
   const { min, max, step, name, value, onChange, onBlur, disabled } = props;
 
   const [mouseFlag, setMouseFlag] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleMouseDown = (flag: -1 | 1) => {
     setMouseFlag(flag);
@@ -21,18 +21,18 @@ function CustomInputNumber(props: CustomInputNumberProps) {
     setMouseFlag(0);
   };
   const stepUp = useCallback(() => {
-    inputRef.current.stepUp();
-    inputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
+    inputRef?.current?.stepUp();
+    inputRef?.current?.dispatchEvent(new Event("change", { bubbles: true }));
   }, []);
   const stepDown = useCallback(() => {
-    inputRef.current.stepDown();
-    inputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
+    inputRef?.current?.stepDown();
+    inputRef?.current?.dispatchEvent(new Event("change", { bubbles: true }));
   }, []);
 
   useEffect(() => {
     const resetActions = () => {
       clearInterval(intervalId);
-      intervalId = null;
+      intervalId = undefined;
     };
     const updateValue = () => {
       if (mouseFlag !== 0) {
@@ -63,7 +63,9 @@ function CustomInputNumber(props: CustomInputNumberProps) {
         onMouseDown={() => handleMouseDown(-1)}
         onMouseUp={handleMouseUp}
         onClick={stepDown}
-        disabled={disabled || value <= min}
+        disabled={
+          disabled || (value !== undefined && min !== undefined && value <= min)
+        }
       >
         −
       </button>
@@ -85,7 +87,9 @@ function CustomInputNumber(props: CustomInputNumberProps) {
         onMouseDown={() => handleMouseDown(1)}
         onMouseUp={handleMouseUp}
         onClick={stepUp}
-        disabled={disabled || value >= max}
+        disabled={
+          disabled || (value !== undefined && max !== undefined && value >= max)
+        }
       >
         ＋
       </button>
