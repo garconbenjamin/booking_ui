@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "scripts": {
     "build": "webpack --mode production",
-    "start": "webpack serve --open --mode development"
+    "start": "webpack serve --open --mode development",
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d dist"
   },
   "main": "index.js",
-  "repository": "https://github.com/garconbenjamin/booking_ui.git",
+  "homepage": "https://garconbenjamin.github.io/booking-ui/",
+  "repository": "https://garconbenjamin.github.io/booking_ui.git",
   "author": "Chin-yu Hsu <chinyu.official@gmail.com>",
   "license": "MIT",
   "devDependencies": {
@@ -40,6 +43,7 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
+    "gh-pages": "^6.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.4.0",
