@@ -3,8 +3,13 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 let intervalId: NodeJS.Timeout | null = null;
 let timeoutId = null;
 
-function CustomInputNumber(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  const { min, max, step, name, value, onChange, onBlur } = props;
+type CustomInputNumberProps = Pick<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "min" | "max" | "step" | "name" | "value" | "onChange" | "onBlur" | "disabled"
+>;
+
+function CustomInputNumber(props: CustomInputNumberProps) {
+  const { min, max, step, name, value, onChange, onBlur, disabled } = props;
 
   const [mouseFlag, setMouseFlag] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -52,13 +57,13 @@ function CustomInputNumber(props: React.InputHTMLAttributes<HTMLInputElement>) {
     };
   }, [mouseFlag]);
   return (
-    <div className="flex justify-between">
+    <div className="flex gap-x-2">
       <button
         className="box btn"
         onMouseDown={() => handleMouseDown(-1)}
         onMouseUp={handleMouseUp}
         onClick={stepDown}
-        disabled={value <= min}
+        disabled={disabled || value <= min}
       >
         −
       </button>
@@ -73,13 +78,14 @@ function CustomInputNumber(props: React.InputHTMLAttributes<HTMLInputElement>) {
         min={min}
         max={max}
         step={step}
+        disabled={disabled}
       />
       <button
         className="box btn"
         onMouseDown={() => handleMouseDown(1)}
         onMouseUp={handleMouseUp}
         onClick={stepUp}
-        disabled={value >= max}
+        disabled={disabled || value >= max}
       >
         ＋
       </button>
