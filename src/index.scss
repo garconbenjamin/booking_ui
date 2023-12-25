@@ -11,9 +11,9 @@
 
   input[type="number"] {
     -moz-appearance: textfield;
-    &:disabled {
-      @apply bg-gray-200 opacity-50 cursor-not-allowed;
-    }
+  }
+  input:disabled {
+    @apply bg-gray-200 opacity-50 cursor-not-allowed;
   }
 }
 
@@ -22,7 +22,7 @@
 }
 .btn {
   @apply hover:bg-gray-200 text-blue-300 border-blue-300;
-  &:disabled {
-    @apply opacity-50 bg-gray-200  cursor-not-allowed;
-  }
+}
+.btn:disabled {
+  @apply opacity-50 bg-gray-200  cursor-not-allowed;
 }
