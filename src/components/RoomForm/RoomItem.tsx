@@ -1,35 +1,18 @@
-import { useEffect, useState, Dispatch, SetStateAction } from 'react';
-import CustomInputNumber from './CustomInputNumber';
-import { INITIAL_ROOM_RESULT, PEOPLE_PER_ROOM } from '../constants';
+import { Dispatch, SetStateAction } from 'react';
+import CustomInputNumber from '../CustomInputNumber';
+import { PEOPLE_PER_ROOM } from '../../constants';
 
 type RoomResult = {
   id: string;
   adult: number;
   child: number;
 };
-type RoomFormProps = {
-  guest: number;
-  room: number;
-  onChange: (result: RoomResult[]) => void;
-};
+
 enum PEOPLE_TYPE {
   ADULT = 'adult',
   CHILD = 'child',
 }
 
-function RoomsInfo(props: { guest: number; room: number; remainingPeople: number }) {
-  const { guest, room, remainingPeople } = props;
-  return (
-    <div className="px-4">
-      <div className="mb-3 font-bold">
-        住客人數：{guest} 人 / {room} 房
-      </div>
-      <div className="bg-blue-50 border border-bg-blue-200 text-gray-500 py-2 px-3 rounded-sm">
-        尚未分配人數： {remainingPeople} 人
-      </div>
-    </div>
-  );
-}
 function RoomItem(props: {
   adult: number;
   child: number;
@@ -93,33 +76,4 @@ function RoomItem(props: {
   );
 }
 
-function RoomForm(props: RoomFormProps) {
-  const { guest, room, onChange: onResultChange } = props;
-  const [rooms, setRooms] = useState<RoomResult[]>(INITIAL_ROOM_RESULT);
-  const remainingPeople = guest - rooms.reduce((acc, room) => acc + room.adult + room.child, 0);
-
-  useEffect(() => {
-    onResultChange(rooms);
-  }, [rooms]);
-  return (
-    <div>
-      <RoomsInfo guest={guest} room={room} remainingPeople={remainingPeople} />
-
-      {rooms.map(({ adult, child, id }, index) => {
-        return (
-          <RoomItem
-            adult={adult}
-            child={child}
-            remainingPeople={remainingPeople}
-            key={id}
-            index={index}
-            className={index === rooms.length - 1 ? '' : 'border-b'}
-            setRooms={setRooms}
-          />
-        );
-      })}
-    </div>
-  );
-}
-export default RoomForm;
-export type { RoomResult };
+export default RoomItem;
