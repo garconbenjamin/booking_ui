@@ -6,7 +6,7 @@
 
 See it in action: [https://garconbenjamin.github.io/booking_ui/](https://garconbenjamin.github.io/booking_ui/)
 
-Demo screenshot: ![image](https://github.com/garconbenjamin/booking_ui/blob/main/demo.png)
+<img src="https://github.com/garconbenjamin/booking_ui/blob/main/demo.png?raw=true" alt="image" width="300" height="auto">
 
 ## Getting Started
 
