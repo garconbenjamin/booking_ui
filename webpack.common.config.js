@@ -3,15 +3,10 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: './src/index.tsx',
   output: {
-    publicPath: 'http://localhost:3000/',
+    publicPath: '/',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
-  },
-
-  devServer: {
-    port: 3000,
-    historyApiFallback: true,
   },
 
   module: {
